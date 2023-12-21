@@ -4,7 +4,7 @@ import tech.reliab.course.kurbanovar.bank.entity.*;
 
 public interface BankService {
     /*Создание банка*/
-    Bank create(Integer id, String name, BankOffice bankOffice, BankATM bankATM, Employee employee, User user);
+    Bank create(Integer id, String name);
     /*Добавление суммы денег в банк*/
     void addMoney(Bank bank, Double sumMoney);
     /*Вычитание суммы денег из банка*/
@@ -20,18 +20,19 @@ public interface BankService {
     //Добавить работника
     void addEmployee(Bank bank, Employee employee);
 
-    //Удалить работника
+    //Удалить работника. Для этого уберите все
     void deleteEmployee(Bank bank, Employee employee);
 
     //Добавить банковский офис.
     void addOffice(Bank bank, BankOffice bankOffice);
 
-    //Убрать банковский офис
+    //Убрать банковский офис. Все банкоматы этого офиса убираются банку
     void deleteOffice(Bank bank, BankOffice bankOffice);
 
-    //Добавить клиента
+    //Добавить юзера
     void addUser(Bank bank, User user);
-    //Удалить клиента
+
     void deleteUser(Bank bank, User user);
 
+    String getInfo(Bank bank);
 }

@@ -8,13 +8,8 @@ import java.util.Objects;
 
 public class BankServiceImpl implements BankService {
     @Override
-    public Bank create(Integer id, String name, BankOffice bankOffice, BankATM bankATM, Employee employee, User user) {
-        Bank bank = new Bank(id, name);
-        this.addBankATM(bank, bankATM);
-        this.addEmployee(bank, employee);
-        this.addOffice(bank,  bankOffice);
-        this.addUser(bank, user);
-        return bank;
+    public Bank create(Integer id, String name) {
+        return new Bank(id, name);
     }
 
     @Override
@@ -211,4 +206,37 @@ public class BankServiceImpl implements BankService {
 
     }
 
+    @Override
+    public String getInfo(Bank bank){
+        String res = "";
+
+        res += bank.toString();
+
+        res += "\n\nИнформация об офисах:\n";
+
+        for (BankOffice bankOffice: bank.getBankOffices()){
+            res += bankOffice.toString();
+            res += "\n\n";
+        }
+
+        res += "\n\nИнформация о банкоматах:\n";
+
+        for (BankATM bankATM: bank.getBankATMS()){
+            res += bankATM.toString();
+            res += "\n\n";
+        }
+
+        res += "\nИнформация о сотрудниках:\n";
+        for (Employee employee: bank.getEmployees()){
+            res += employee.toString();
+            res += "\n\n";
+        }
+
+        res += "\nИнформация о клиетах:\n";
+        for (User user: bank.getClients()){
+            res += user.toString();
+            res += "\n\n";
+        }
+        return res;
+    }
 }
