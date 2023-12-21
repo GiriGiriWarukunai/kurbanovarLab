@@ -2,6 +2,8 @@ package tech.reliab.course.kurbanovar.bank.service;
 
 import tech.reliab.course.kurbanovar.bank.entity.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public interface UserService {
@@ -11,6 +13,9 @@ public interface UserService {
     void changeWork(User user, String newWork, Double newMonthSalary);
     //Вывести информацию о клиенте
     String getInfo(User user);
+
+    void saveToFile(String fileName, Bank bank, User user) throws IOException;
+    void updateFromFile(String fileName, Bank bank, ArrayList<Bank> banks, ArrayList<User> users) throws IOException;
 
 
 }

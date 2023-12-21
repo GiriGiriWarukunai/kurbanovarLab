@@ -76,7 +76,6 @@ public class CreditAccountServiceImpl implements CreditAccountService {
                     AtmService atmService = new AtmServiceImpl();
                     atmService.subtractMoney(bankATM, amount);
                     user.setCreditAccounts(creditAccounts);
-                    System.out.println("Кредит оформлен");
                     return;
                 }
             }

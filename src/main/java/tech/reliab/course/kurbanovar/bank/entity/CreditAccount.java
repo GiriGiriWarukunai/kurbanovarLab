@@ -1,6 +1,8 @@
 package tech.reliab.course.kurbanovar.bank.entity;
 
 import tech.reliab.course.kurbanovar.bank.entity.common.Account;
+import tech.reliab.course.kurbanovar.bank.entity.jsonClasses.JsonCreditAcc;
+
 import java.time.LocalDate;
 
 
@@ -27,6 +29,20 @@ public class CreditAccount extends Account {
         this.mountsPayment = (1+ interestRate/100)*amount/countMonth;
         this.employee = employee;
         this.paymentAccount = paymentAccount;
+    }
+
+    public void updateFromJsonClass(JsonCreditAcc jsonCreditAcc, Bank bank) {
+        this.setId(jsonCreditAcc.getId());
+        this.setBank(bank);
+        this.getUser().setId(jsonCreditAcc.getUserID());
+        this.getPaymentAccount().setId(jsonCreditAcc.getPayAccID());
+        this.getEmployee().setId(jsonCreditAcc.getEmployeeID());
+        this.setStartDate(LocalDate.parse(jsonCreditAcc.getStartDate()));
+        this.setEndDate(LocalDate.parse(jsonCreditAcc.getEndDate()));
+        this.setCountMonth(jsonCreditAcc.getCountMonth());
+        this.setAmount(jsonCreditAcc.getAmount());
+        this.setMountsPayment(jsonCreditAcc.getMountsPayment());
+        this.setInterestRate(jsonCreditAcc.getInterestRate());
     }
 
     @Override

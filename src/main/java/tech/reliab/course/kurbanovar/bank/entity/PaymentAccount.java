@@ -1,6 +1,7 @@
 package tech.reliab.course.kurbanovar.bank.entity;
 
 import tech.reliab.course.kurbanovar.bank.entity.common.Account;
+import tech.reliab.course.kurbanovar.bank.entity.jsonClasses.JsonPayAcc;
 
 public class PaymentAccount extends Account {
    private Double sum;
@@ -18,6 +19,13 @@ public class PaymentAccount extends Account {
                 "\nСумма денег: " + String.format("%.2f",sum) +
                 "\n";
         return str;
+    }
+
+    public void updateFromJsonClass(JsonPayAcc jsonPayAcc, Bank bank) {
+        this.setId(jsonPayAcc.getId());
+        this.setBank(bank);
+        this.getUser().setId(jsonPayAcc.getUserID());
+        this.setSum(jsonPayAcc.getSum());
     }
 
     public Double getSum() {

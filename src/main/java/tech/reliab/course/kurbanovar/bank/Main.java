@@ -6,6 +6,7 @@ import tech.reliab.course.kurbanovar.bank.service.*;
 import tech.reliab.course.kurbanovar.bank.service.impl.*;
 import tech.reliab.course.kurbanovar.bank.utils.StatusATM;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +56,7 @@ public class Main {
                     atmService.addMoney(bankATM, 12313.0);
                     for (int k = 0; k < 4; k++) {
                         int temp = 5 * (j + 3 * i) + k;
-                        Employee employee = employeeService.create(temp, String.format("Иван#%d", temp), String.format("Иванов#%d", temp), new Date(19081917), String.format("Работа%d", k), (double) 500 * k);
+                        Employee employee = employeeService.create(temp, String.format("Григорий#%d", temp), String.format("Потёмкин#%d", temp), new Date(19081917), String.format("Работа%d", k), (double) 500 * k);
                         if (k % 2 == 0) {
                             employee.setCanLend(false);
                         }
@@ -74,7 +75,7 @@ public class Main {
                     atmService.addMoney(bankATM, 123130000.0);
                     for (int k = 0; k < 4; k++) {
                         int temp = 5 * (j + 3 * i) + k;
-                        Employee employee = employeeService.create(temp, String.format("Максим#%d", temp), String.format("Сидоров#%d", temp), new Date(19081917), String.format("Работа#%d", k), (double) 500 * k);
+                        Employee employee = employeeService.create(temp, String.format("Григорий#%d", temp), String.format("Орлов#%d", temp), new Date(19081917), String.format("Работа#%d", k), (double) 500 * k);
                         if (k % 2 == 0) {
                             employee.setCanLend(false);
                         }
@@ -90,7 +91,7 @@ public class Main {
         }
 
         for (int i = 0; i < 5; i++) {
-            User user = userService.create(i, String.format("Григорий#%d", i), String.format("Распутин#%d", i), new Date(10112000), String.format("Работа#%d", i));
+            User user = userService.create(i, String.format("Эрнест#%d", i), String.format("Светлов#%d", i), new Date(10112000), String.format("Работа#%d", i));
             users.add(user);
 
             for (int j = 0; j < 2; j++) {
@@ -238,8 +239,156 @@ public class Main {
 
     }
 
+    static void mainLab_4() {
+        ArrayList<Bank> banks = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
+        BankService bankService = new BankServiceImpl();
+        AtmService atmService = new AtmServiceImpl();
+        BankOfficeService bankOfficeService = new BankOfficeServiceImpl();
+        EmployeeService employeeService = new EmployeeServiceImpl();
+        CreditAccountService creditAccountService = new CreditAccountServiceImpl();
+        PaymentAccountService paymentAccountService = new PaymentAccountServiceImpl();
+        UserService userService = new UserServiceImpl();
+
+        for (int i = 0; i < 5; i++) {
+            Bank bank = bankService.create(i, String.format("Банк#%d", i));
+            banks.add(bank);
+            for (int j = 0; j < 3; j++) {
+                BankOffice bankOffice = bankOfficeService.create(i * 3 + j, String.format("Офис#%d", i * 3 + j), String.format("Адрес#%d", i * 3 + j), true, 500.0);
+                bankService.addOffice(banks.get(i), bankOffice);
+                bankOfficeService.addMoney(bankOffice, 2000000.0);
+
+                BankATM bankATM = atmService.create(i * 3 + j, String.format("Банкомат#%d", i * 3 + j),
+                        StatusATM.Work, 500.0);
+                bankService.addBankATM(banks.get(i), bankATM);
+
+                bankOfficeService.addATM(banks.get(i).getBankOffices().get(j), banks.get(i).getBankATMS().get(j));
+                atmService.addMoney(bankATM, 1231323103.0);
+                for (int k = 0; k < 5; k++) {
+                    int temp = 5 * (j + 3 * i) + k;
+                    Employee employee = employeeService.create(temp, String.format("Иван%d", temp), String.format("Иванов%d", temp), new Date(19081917), String.format("Работа%d", k), (double) 500 * k);
+
+                    bankService.addEmployee(banks.get(i), employee);
+                    bankOfficeService.addEmployee(banks.get(i).getBankOffices().get(j), employee);
+                }
+                employeeService.setWorkerToBankomat(banks.get(i).getBankOffices().get(j).getBankATMS().get(0),
+                        banks.get(i).getBankOffices().get(j).getEmployees().get(0));
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            User user = userService.create(i, String.format("Евгений#%d", i), String.format("Серов#%d", i), new Date(10112000), String.format("Работа#%d", i));
+            users.add(user);
+
+            for (int j = 0; j < 2; j++) {
+
+                int bankIndex;
+                if (i + j == 5)
+                    bankIndex = 0;
+                else
+                    bankIndex = i + j;
+
+                paymentAccountService.addPayment(i * 2 + j, users.get(i), banks.get(bankIndex));
+                ArrayList <PaymentAccount> paymentAccounts = users.get(i).getPaymentAccounts();
+                paymentAccountService.addMoney(paymentAccounts.get(j), 100.0 * (j + i));
+                creditAccountService.openCredit(i * 2 + j, users.get(i),
+                        banks.get(bankIndex).getBankOffices().get(0), banks.get(bankIndex).getBankOffices().get(0).getEmployees().get(0),
+                        LocalDate.now(), 24, 100.0);
+            }
+        }
+        Scanner input = new Scanner(System.in);
+
+
+        boolean flag = true;
+        while (flag) {
+            try {
+
+                System.out.println("\nВыберите действие: ");
+                System.out.println("1. Вывод всех счетов пользователя по конкретному банку в .txt файл");
+                System.out.println(
+                        "2. Перенести счет пользователя из одного банка в другой через .txt файл");
+                System.out.println("3. Выход");
+
+                int action = input.nextInt();
+                switch (action) {
+                    case 1:
+                        System.out.println("Выберите id пользователя для которого вы хотите вывести все счета в текстовый файл (.txt)");
+                        for (User user : users) {
+                            System.out.println("Информация о пользователе " + user.getId() + ":\n" + user + "\n");
+                        }
+                        System.out.print("Выбранный id: ");
+                        int choseUserID = input.nextInt();
+                        int uid = 0;
+                        for (int index = 0; index < banks.size(); index++) {
+                            if (users.get(index).getId() == choseUserID) {
+                                uid = index;
+                                break;
+                            }
+                        }
+
+                        System.out.println("Платёжные счета пользователя:");
+                        System.out.println(users.get(uid).getPaymentAccounts());
+                        System.out.println("\nКредитные счета пользователя:");
+                        System.out.println(users.get(uid).getCreditAccounts());
+
+                        System.out.println("Введите id банка из представленных на экране");
+                        for (Bank value : banks) {
+                            System.out.println("Информация о банке " + value.getId().toString() + ":\n" + value);
+                        }
+                        System.out.print("Выбранный id: ");
+                        int choseBankID = input.nextInt();
+                        Bank choseBank = null;
+                        for (int index = 0; index < banks.size(); index++) {
+                            if (banks.get(index).getId() == choseBankID) {
+                                choseBank = banks.get(index);
+                                break;
+                            }
+                            if (index == banks.size() - 1)
+                                choseBank = banks.get(index);
+                        }
+                        userService.saveToFile("file.txt", choseBank, users.get(uid));
+                        break;
+                    case 2:
+                        System.out.print("Введите название файла:");
+                        input.nextLine();
+                        String fileName = input.nextLine();
+                        System.out.println("Введите id банка из представленных на экране");
+                        for (Bank bank : banks) {
+                            System.out.println("Информация о банке " + bank.getId().toString() + ":\n" + bank);
+                        }
+                        System.out.print("Выбранный id: ");
+                        choseBankID = input.nextInt();
+                        int id = 0;
+                        for (int index = 0; index < banks.size(); index++) {
+                            if (banks.get(index).getId() == choseBankID) {
+                                id = index;
+                                break;
+                            }
+                            if (index == banks.size() - 1)
+                                id = index;
+                        }
+
+                        userService.updateFromFile(fileName, banks.get(id), banks, users);
+                        System.out.println("Информация о выбранном банке после добавления пользователя:");
+                        System.out.println(banks.get(id).toString());
+                        ArrayList<User> user1 = banks.get(id).getClients();
+                        for (User user : user1) {
+                            System.out.println("Информация о пользователе " + user.getId() + ":\n" + userService.getInfo(user) + "\n");
+                        }
+
+                        break;
+                    case 3:
+                        flag = false;
+                        break;
+                }
+            } catch (IOException e) {
+                System.out.println("Ошибка файла: " + e);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
-        mainLab_3();
+        mainLab_4();
     }
 }
