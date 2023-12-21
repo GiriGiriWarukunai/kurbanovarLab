@@ -56,7 +56,7 @@ public class Main {
                     atmService.addMoney(bankATM, 12313.0);
                     for (int k = 0; k < 4; k++) {
                         int temp = 5 * (j + 3 * i) + k;
-                        Employee employee = employeeService.create(temp, String.format("Григорий#%d", temp), String.format("Потёмкин#%d", temp), new Date(19081917), String.format("Работа%d", k), (double) 500 * k);
+                        Employee employee = employeeService.create(temp, String.format("Иван#%d", temp), String.format("Иванов#%d", temp), new Date(19081917), String.format("Работа%d", k), (double) 500 * k);
                         if (k % 2 == 0) {
                             employee.setCanLend(false);
                         }
@@ -75,7 +75,7 @@ public class Main {
                     atmService.addMoney(bankATM, 123130000.0);
                     for (int k = 0; k < 4; k++) {
                         int temp = 5 * (j + 3 * i) + k;
-                        Employee employee = employeeService.create(temp, String.format("Григорий#%d", temp), String.format("Орлов#%d", temp), new Date(19081917), String.format("Работа#%d", k), (double) 500 * k);
+                        Employee employee = employeeService.create(temp, String.format("Максим#%d", temp), String.format("Сидоров#%d", temp), new Date(19081917), String.format("Работа#%d", k), (double) 500 * k);
                         if (k % 2 == 0) {
                             employee.setCanLend(false);
                         }
@@ -91,7 +91,7 @@ public class Main {
         }
 
         for (int i = 0; i < 5; i++) {
-            User user = userService.create(i, String.format("Эрнест#%d", i), String.format("Светлов#%d", i), new Date(10112000), String.format("Работа#%d", i));
+            User user = userService.create(i, String.format("Григорий#%d", i), String.format("Распутин#%d", i), new Date(10112000), String.format("Работа#%d", i));
             users.add(user);
 
             for (int j = 0; j < 2; j++) {
