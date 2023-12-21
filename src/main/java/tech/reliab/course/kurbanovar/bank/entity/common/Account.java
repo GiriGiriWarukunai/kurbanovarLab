@@ -14,8 +14,6 @@ abstract public class Account {
         this.bank = bank;
     }
 
-
-
     public Integer getId() {
         return id;
     }

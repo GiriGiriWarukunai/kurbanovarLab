@@ -39,7 +39,7 @@ public class User extends Person {
 
     @Override
     public String toString() {
-        String str =  "\nUser\nИмя: " + getFullName() +
+        String str =  "\nid: " + id + "\nИмя: " + getFullName() +
                 "\nДата рождения: " + birthday +
                 "\nРабота: " + work +
                 "\nЗарплата: " + String.format("%.2f",monthSalary);

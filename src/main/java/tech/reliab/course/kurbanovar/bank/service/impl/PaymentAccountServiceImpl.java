@@ -4,6 +4,7 @@ import tech.reliab.course.kurbanovar.bank.entity.Bank;
 import tech.reliab.course.kurbanovar.bank.entity.PaymentAccount;
 import tech.reliab.course.kurbanovar.bank.entity.User;
 
+import tech.reliab.course.kurbanovar.bank.exceptions.PaymentException;
 import tech.reliab.course.kurbanovar.bank.service.BankService;
 import tech.reliab.course.kurbanovar.bank.service.PaymentAccountService;
 
@@ -20,13 +21,11 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
 
     @Override
     public void addMoney(PaymentAccount payAcc, Double sumMoney) {
-
         payAcc.setSum(payAcc.getSum() + sumMoney);
     }
 
     @Override
     public void subtractMoney(PaymentAccount payAcc, Double sumMoney) {
-
         payAcc.setSum(payAcc.getSum() - sumMoney);
     }
 
@@ -56,10 +55,10 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
 
     @Override
     public void DeletePayment(User user, Bank bank, PaymentAccount paymentAccount){
-        if (paymentAccount.getSum() < 0){
-            System.out.println("На счету не погашен долг");
-        }
-        else {
+        try{
+            if (paymentAccount.getSum() < 0){
+                throw new PaymentException("Попытка закрыть счёт", "На счету не погашен долг");
+            }
             ArrayList<PaymentAccount> paymentAccounts = user.getPaymentAccounts();
             paymentAccounts.remove(paymentAccount);
             user.setPaymentAccounts(paymentAccounts);
@@ -71,10 +70,12 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
                     break;
                 }
             }
-            if (!flag) {
+            if (!flag){
                 BankService bankService = new BankServiceImpl();
-                bankService.deleteUser(bank, user);
+                bankService.deleteUser(bank,user);
             }
+        } catch (PaymentException e) {
+            System.err.println(e.getMessage());
         }
     }
 }

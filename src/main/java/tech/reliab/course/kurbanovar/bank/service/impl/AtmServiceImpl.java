@@ -4,6 +4,7 @@ import tech.reliab.course.kurbanovar.bank.entity.Bank;
 import tech.reliab.course.kurbanovar.bank.entity.BankATM;
 import tech.reliab.course.kurbanovar.bank.entity.BankOffice;
 import tech.reliab.course.kurbanovar.bank.entity.Employee;
+import tech.reliab.course.kurbanovar.bank.exceptions.BankAtmException;
 import tech.reliab.course.kurbanovar.bank.service.AtmService;
 import tech.reliab.course.kurbanovar.bank.utils.StatusATM;
 
@@ -21,33 +22,38 @@ public class AtmServiceImpl implements AtmService {
 
     @Override
     public void addMoney(BankATM bankATM, Double sumMoney) {
-        if (Objects.equals(bankATM.getStatus(), StatusATM.NotWork)) {
-            System.out.println("Банкомат не работает");
-        }
-        else {
+        try{
+            if (Objects.equals(bankATM.getStatus(), StatusATM.NotWork)) {
+                throw new BankAtmException("Попытка добавить деньги", "Банкомат не работает");
+            }
             bankATM.setMoney(bankATM.getMoney() + sumMoney);
             bankATM.getBankOffice().setMoney(bankATM.getBankOffice().getMoney() + sumMoney);
-            bankATM.getBank().setMoney(bankATM.getBank().getMoney() + sumMoney);
+            bankATM.getBank().setMoney( bankATM.getBank().getMoney() + sumMoney);
+        } catch (BankAtmException e) {
+            System.err.println(e.getMessage());
         }
     }
 
 
     @Override
     public void subtractMoney(BankATM bankATM, Double sumMoney) {
-
-        if (Objects.equals(bankATM.getStatus(), StatusATM.NotWork) || (Objects.equals(bankATM.getStatus(),
-                StatusATM.NoMoney)))
-            System.out.println("Банкомат не выдаёт денег");
-        else if (bankATM.getMoney() < sumMoney)
-            System.out.printf("У банка не хватает %.2f денег%n",sumMoney-bankATM.getMoney());
-        else if (Objects.equals(bankATM.getMoney(), sumMoney))
-            bankATM.setStatus(StatusATM.NoMoney);
-        else {
-            //bankATM.setMoney(bankATM.getMoney() - sumMoney);
-            //bankATM.getBankOffice().setMoney(bankATM.getBankOffice().getMoney() - sumMoney);
-            bankATM.getBank().setMoney(bankATM.getBank().getMoney() - sumMoney);
+        try{
+            if (Objects.equals(bankATM.getStatus(), StatusATM.NotWork) || (Objects.equals(bankATM.getStatus(),
+                    StatusATM.NoMoney)))
+                throw new BankAtmException("Попытка cнять деньги", "Банкомат не выдаёт денег");
+            if (bankATM.getMoney() < sumMoney)
+                throw new BankAtmException("Попытка cнять деньги", String.format( "У банка не хватает %f денег",sumMoney-bankATM.getMoney()));
+            if (Objects.equals(bankATM.getMoney(), sumMoney))
+                bankATM.setStatus(StatusATM.NoMoney);
+            bankATM.setMoney(bankATM.getMoney() - sumMoney);
+            bankATM.getBankOffice().setMoney(bankATM.getBankOffice().getMoney() - sumMoney);
+            bankATM.getBank().setMoney( bankATM.getBank().getMoney() - sumMoney);
+        } catch (BankAtmException e) {
+            System.err.println(e.getMessage());
         }
+
     }
+
 
     @Override
     public void turnOnATM(BankATM bankATM){

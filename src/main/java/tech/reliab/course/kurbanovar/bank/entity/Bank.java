@@ -22,14 +22,15 @@ public class Bank {
         this.employees = new ArrayList<>();
         this.clients = new ArrayList<>();
         Random random = new Random();
-        this.rating = random.nextInt(0, 100);
+        this.rating = random.nextInt(0, 90);
         this.money = random.nextDouble(0, 1000000000);
         this.interestRate = 20.0- this.getRating() /5.0;;
     }
 
     @Override
     public String toString(){
-        return "\nBank \nНазвание банка: " + name +
+        return  "\nid: " + id +
+                "\nНазвание банка: " + name +
                 "\nКоличество офисов: " + getBankOffices().size() +
                 "\nКоличество банкоматов: " + getBankATMS().size() +
                 "\nКоличество сотрудников: " + getEmployees().size() +

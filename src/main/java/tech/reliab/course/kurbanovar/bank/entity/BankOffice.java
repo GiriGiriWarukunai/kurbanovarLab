@@ -36,7 +36,7 @@ public class BankOffice{
 
     @Override
     public String toString() {
-        String str =  "\nBankOffice \nНазвание офиса: " + name +
+        String str =  "\nid: " + id + "\nНазвание офиса: " + name +
                 "\nБанк: " + bank.getName() +
                 "\nАдрес: " + address +
                 "\nСтатус: ";
@@ -71,6 +71,12 @@ public class BankOffice{
         }
         else{
             str += "\nНельзя внести деньги";
+        }
+        if (mayApplyCredit){
+            str += "\nВыдают кредит";
+        }
+        else{
+            str += "\nНе выдают кредит";
         }
         str += "\nДенежная сумма: " + String.format("%.2f",money) +
                 "\nАрендная плата: " + String.format("%.2f",rentCost);

@@ -12,7 +12,7 @@ public class PaymentAccount extends Account {
 
     @Override
     public String toString() {
-        String str = "\nPaymentAccount\nid " + id +
+        String str = "\nid " + id +
                 "\nБанк: " + bank.getName() +
                 "\nПользователь: " + user.getFullName() +
                 "\nСумма денег: " + String.format("%.2f",sum) +

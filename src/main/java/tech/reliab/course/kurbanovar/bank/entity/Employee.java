@@ -28,7 +28,7 @@ public class Employee extends Person {
 
     @Override
     public String toString() {
-        String str =  "\nEmployee \nИмя: " + getFullName() +
+        String str =  "\nid: " + id + "\nИмя: " + getFullName() +
                 "\nДата рождения: " + birthday +
                 "\nДолжность: " + job +
                 "\nБанк: " + bank.getName();
@@ -39,7 +39,7 @@ public class Employee extends Person {
                 str += "\nМожет выдавать кредиты";
             }
             else{
-                str += "\nНе Может выдавать кредиты";
+                str += "\nНе может выдавать кредиты";
             }
         }
         else{

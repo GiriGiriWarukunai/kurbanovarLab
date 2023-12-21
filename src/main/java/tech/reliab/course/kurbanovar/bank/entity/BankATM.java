@@ -31,7 +31,7 @@ public class BankATM {
 
     @Override
     public String toString(){
-        String str =  "\nBankAtm\nНазвание банкомата: " + name;
+        String str =  "\nid: " + id + "\nНазвание банкомата: " + name;
         if (bankOffice != null)
            str += "\nАдрес: " + bankOffice.getAddress();
         else {
